@@ -7,7 +7,7 @@ export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
       origin: "*",
-        methods: ["GET", "POST"],
+      methods: ["GET", "POST"],
     },
   });
 
@@ -16,7 +16,7 @@ export const initSocket = (server) => {
 
     // User message event
     Socket.on("user-message", async (message) => {
-        console.log("Received message from client: ", message);
+      console.log("Received message from client: ", message);
       try {
         const chat = await chatService(message);
         console.log("Sending reply to client: ", chat);
