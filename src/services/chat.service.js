@@ -1,5 +1,5 @@
 import Conversation from "../models/conversation.model.js";
-import { openaiClient } from "../utils/openaiClient.js";
+import OpenAI from "openai";
 
 const conversation = [
   {
@@ -8,6 +8,10 @@ const conversation = [
       "You are a chat assistant, reply only in plain text without any formatting.",
   },
 ];
+const client = new OpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY,
+});
 
 export const chatService = async (message) => {
   if (!message || typeof message !== "string") {
@@ -19,15 +23,15 @@ export const chatService = async (message) => {
     content: message,
   });
   const conversation = await Conversation.find().sort({ createdAt: 1 });
-  const response = await openaiClient.chat.completions.create({
-    //model: "openai/gpt-oss-20b:free",
-    //model: "meta-llama/llama-3.2-3b-instruct:free",
+  const response = await client.chat.completions.create({
+    model: "openai/gpt-oss-20b:free",
+    //model: "meta-llama/llama-3.2-3b-instruct:free", these are free models just like gpt-4 gpt-4o-mini etc
     //model: "tngtech/deepseek-r1t2-chimera:free",
-    model: "google/gemma-3-12b-it:free",
+    //model: "google/gemma-3-12b-it:free",
     messages: conversation.map((c) => ({ role: c.role, content: c.content })),
   });
   const reply = response.choices[0].message.content;
-  //conversation.push({ role: "assistant", content: reply });
+  //conversation.push({ role: "assistant", content: reply }); temp array for previous chat or you can also use database
   await Conversation.create({
     role: "assistant",
     content: reply,

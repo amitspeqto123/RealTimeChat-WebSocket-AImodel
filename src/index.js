@@ -49,16 +49,27 @@ const client = new OpenAI({
 //   },
 // ];
 
-// async function chat() {
-//   console.log("Request sent...");
-//   const userInput = promt("Enter your message: ");
-//   const response = await client.chat.completions.create({
-//     model: "openai/gpt-oss-20b:free",
-//     messages: buildMessages(userInput),
-//   });
-//   console.log(response.choices[0].message.content);
-// }
-// chat();
+async function chat() {
+  console.log("Request sent...");
+  //const userInput = promt("Enter your message: ");
+  const response = await client.chat.completions.create({
+    model: "openai/gpt-oss-20b:free",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are an elite athlete mindset coach.Speak direct, disciplined, no excuses.Give practical action steps.Keep responses short and powerful",
+      },
+      {
+        role: "user",
+        content: "I feel lazy and don’t want to work today.",
+      },
+    ],
+  });
+  console.log(response.choices[0].message.content);
+}
+
+//chat();
 
 // app.use("/chat", async (req, res) => {
 //   try {
